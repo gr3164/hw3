@@ -9,27 +9,34 @@ let reviews = [
     {name: 'title3', reviews:[]},
 ]
 
+//Функция для дабовления продукта
+function addProduct(){
+  form.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const name = document.querySelector('#nameProduct').value;
+    const feedback = document.querySelector('#feedback').value;
 
-if(form){
-    form.addEventListener('submit', (e)=>{
-        e.preventDefault();
-        const name = document.querySelector('#nameProduct').value;
-        const feedback = document.querySelector('#feedback').value;
+    const curent = reviews.find(el => el.name === name);
+
+    if(curent){
+        curent.reviews.push({id: new Date, text: feedback});
+    }else{
+        reviews.push({name:name, reviews:[{id: new Date, text: feedback}]});
+    }
     
-        const curent = reviews.find(el => el.name === name);
-    
-        if(curent){
-            curent.reviews.push({id: new Date, text: feedback});
-        }else{
-            reviews.push({name:name, reviews:[{id: new Date, text: feedback}]});
-        }
-        
-        localStorage.setItem('reviews', JSON.stringify(reviews));
-        form.reset()
-    })
+    localStorage.setItem('reviews', JSON.stringify(reviews));
+    form.reset()
+  })
 }
 
-reviews = JSON.parse(localStorage.getItem('reviews'));
+if(form){
+  addProduct();
+}
+
+if(!reviews){
+  reviews = JSON.parse(localStorage.getItem('reviews'));
+}
+
 
 
 // Функция для отображения списка всех продуктов с отзывами
@@ -42,9 +49,14 @@ function displayProducts() {
   for (const product of reviews) {
     if (product.reviews.length > 0) {
       const productItem = document.createElement('div');
+      const productName = document.createElement('h3');
+      productItem.classList = 'product'
+      productName.classList = 'product__title'
       const feedbacks = document.createElement('ul')
-      productItem.textContent = product.name;
+      feedbacks.classList = 'product__list'
+      productName.textContent =product.name;
       productItem.addEventListener('click', () => displayReviews(product.reviews, feedbacks));
+      productItem.appendChild(productName);
       productList.appendChild(productItem);
       productItem.appendChild(feedbacks);
     }
@@ -57,13 +69,14 @@ function displayReviews(productReviews, feedbacks) {
 
   for (const review of productReviews) {
     const reviewItem = document.createElement('li');
+  
     reviewItem.textContent = review.text;
-
+    
     const deleteButton = document.createElement('button');
     deleteButton.textContent = 'Удалить';
-    deleteButton.addEventListener('click', () => deleteReview(review, feedbacks));
     reviewItem.appendChild(deleteButton);
-
+    deleteButton.addEventListener('click', () => deleteReview(review, feedbacks));
+  
     feedbacks.appendChild(reviewItem);
   }
 }

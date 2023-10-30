@@ -141,21 +141,31 @@ body{
     color: #fff;
 }
 
-.products{
+#app{
     display: flex;
-    gap: 40px   ;
+    flex-direction: column;
+    gap: 20px   ;
+}
+
+.products{
+    
 }
 
 .product{
     padding: 20px 40px;
     background-color: #2f2f2f;
     color: #e6e6e6;
-    
+    cursor: pointer;
 }
 
 .product__title{
     font-size: 30px;
     margin-bottom: 20px;
+}
+.product__list{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 a{
